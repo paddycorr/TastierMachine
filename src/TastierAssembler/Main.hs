@@ -3,6 +3,7 @@ module Main where
 import qualified TastierMachine.Machine as Machine
 import qualified TastierMachine.Instructions as I
 import qualified TastierMachine.Bytecode as Bytecode
+import TastierAssembler.Parser
 import Data.Array (Array, listArray)
 import Data.Int (Int16)
 import Data.Char (isSpace, isAlphaNum)
@@ -18,6 +19,7 @@ import qualified Control.Monad.RWS.Lazy as RWS
 commentOpenString = ";;"
 eformatMarker = "."
 
+<<<<<<< HEAD
 myReadInteger a =
   case B.readInteger a of
     Just x -> x
@@ -151,9 +153,17 @@ patchLabelAddresses symtab instructions =
       error $ "Reference to undefined label " ++ (show labelText) ++
               " on line " ++ (show lineNumber)
 
+=======
+>>>>>>> c22c2fbf1691c635bbe3d053a2f4045bfdcde3eb
 ignoreLinePredicate l = (not $ B.null l) &&
                         (not $ B.isPrefixOf commentOpenString l) &&
                         (not $ B.isPrefixOf eformatMarker l)
+
+flatten x =
+  case x of
+    (i, Right a) -> a
+    (i, Left b) -> error $ "Line " ++ show i ++
+                           ": cannot assemble unresolved instruction " ++ show b
 
 main = do
   args <- getArgs
@@ -175,6 +185,8 @@ main = do
     let instructions' = patchLabelAddresses symtab
                         (zip [1..length instructions] instructions)
 
-    B.writeFile (args !! 1) $ P.runPut $ Bytecode.save instructions'
+    let instructions'' = map flatten instructions'
+
+    B.writeFile (args !! 1) $ P.runPut $ Bytecode.save instructions''
   else
     error $ "Usage: tasm <input assembler file> <output bytecode file>"
