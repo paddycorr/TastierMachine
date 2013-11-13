@@ -35,6 +35,9 @@ parseInstruction lineNumber text =
     ["Lss"]         -> Right $ I.Nullary I.Lss
     ["Gtr"]         -> Right $ I.Nullary I.Gtr
     ["Neg"]         -> Right $ I.Nullary I.Neg
+    ["Neq"]         -> Right $ I.Nullary I.Neq
+    ["Leq"]         -> Right $ I.Nullary I.Leq
+    ["Geq"]         -> Right $ I.Nullary I.Geq
     ["Load", a, b]  -> Right $ I.Binary I.Load
                                (fromIntegral $ fst $ myReadInteger a)
                                (fromIntegral $ fst $ myReadInteger b)
